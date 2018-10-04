@@ -1,12 +1,20 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import App from './components/App'
+const port = process.env.PORT || 3000
+const io = require('socket.io')(port)
 
-Vue.config.productionTip = false
+io.on('connection', function(socket) {
+  console.log('connection')
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  render: h => h(App),
+  socket.on('open', function() {
+    console.log('open')
+    console.log(arguments)
+  })
+
+  socket.on('message', function() {
+    console.log('message')
+    console.log(arguments)
+  })
+
+  socket.on('disconnect', function() {
+    console.log('disconnect')
+  })
 })
