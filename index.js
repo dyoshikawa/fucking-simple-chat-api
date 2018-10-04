@@ -39,19 +39,14 @@ io.on('connection', function(socket) {
     console.log(arguments)
   })
 
-  socket.on('message', function() {
+  socket.on('message', async function() {
     console.log('message')
     console.log(arguments['0'])
-    sequelize
-      .sync()
-      .then(() =>
-        User.create({
-          name: arguments['0'],
-        })
-      )
-      .then(jane => {
-        console.log(jane.toJSON())
-      })
+    await sequelize.sync()
+    const data = await User.create({
+      name: arguments['0'],
+    })
+    console.log(data.toJSON())
   })
 
   socket.on('disconnect', function() {
