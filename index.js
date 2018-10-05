@@ -1,5 +1,9 @@
-const port = process.env.PORT || 3000
-const io = require('socket.io')(port)
+const app = require('express')()
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+
+const port = process.env.PORT || 8080
+
 const Sequelize = require('sequelize')
 const sequelize = new Sequelize('postgres', 'postgres', 'secret', {
   host: 'localhost',
@@ -31,6 +35,21 @@ const User = sequelize.define('user', {
   },
 })
 
+// cors
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.get('/', async function(req, res) {
+  const data = await User.findAll()
+  res.send(data)
+})
+
+// cors
+io.origins('*:*')
+
 io.on('connection', function(socket) {
   console.log('connection')
 
@@ -52,4 +71,8 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     console.log('disconnect')
   })
+})
+
+http.listen(port, function() {
+  console.log('listening on *:' + port)
 })
