@@ -25,6 +25,10 @@ const User = sequelize.define('user', {
     type: Sequelize.STRING,
     field: 'name',
   },
+  content: {
+    type: Sequelize.STRING,
+    field: 'content',
+  },
   createdAt: {
     type: Sequelize.DATE,
     field: 'created_at',
@@ -63,14 +67,18 @@ io.on('connection', function(socket) {
 
   socket.on('message', async function(chat) {
     console.log('message')
-    console.log(msg)
+    console.log(chat)
     await sequelize.sync()
     const data = await User.create({
       name: chat.name,
       content: chat.content,
     })
     console.log(data.toJSON())
-    io.emit('chat message', chat)
+    io.emit('chat message', {
+      name: data.name,
+      content: data.content,
+      createdAt: data.createdAt,
+    })
   })
 
   socket.on('disconnect', function() {
