@@ -50,7 +50,7 @@ app.use(function(req, res, next) {
 })
 
 app.get('/', async function(req, res) {
-  const data = await User.findAll()
+  const data = await User.findAll({ order: [['createdAt', 'DESC']] })
   res.send(data)
 })
 
@@ -68,12 +68,14 @@ io.on('connection', function(socket) {
   socket.on('message', async function(chat) {
     console.log('message')
     console.log(chat)
+
     await sequelize.sync()
     const data = await User.create({
       name: chat.name,
       content: chat.content,
     })
     console.log(data.toJSON())
+
     io.emit('chat message', {
       name: data.name,
       content: data.content,
