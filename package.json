@@ -10,9 +10,12 @@
     "socket.io": "^1.7.3"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "debug": "iocat -v --socketio ws://localhost:8080"
   },
   "devDependencies": {
-    "prettier": "^1.14.3"
+    "iocat": "^0.4.1",
+    "prettier": "^1.14.3",
+    "socket.io-client": "^2.1.1"
   }
 }

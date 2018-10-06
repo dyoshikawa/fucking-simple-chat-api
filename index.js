@@ -37,10 +37,13 @@ const User = sequelize.define('user', {
 
 // cors
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
 
 app.get('/', async function(req, res) {
   const data = await User.findAll()
@@ -58,14 +61,16 @@ io.on('connection', function(socket) {
     console.log(arguments)
   })
 
-  socket.on('message', async function() {
+  socket.on('message', async function(chat) {
     console.log('message')
-    console.log(arguments['0'])
+    console.log(msg)
     await sequelize.sync()
     const data = await User.create({
-      name: arguments['0'],
+      name: chat.name,
+      content: chat.content,
     })
     console.log(data.toJSON())
+    io.emit('chat message', chat)
   })
 
   socket.on('disconnect', function() {
