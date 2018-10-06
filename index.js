@@ -5,9 +5,9 @@ const io = require('socket.io')(http)
 const port = process.env.PORT || 8080
 
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('postgres', 'postgres', 'secret', {
-  host: 'localhost',
-  port: 5432,
+const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   dialect: 'postgres',
 
   pool: {
